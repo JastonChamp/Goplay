@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoPlay - Learn &amp; Play</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="app-header">
+    <h1 id="header-title" class="clickable" onclick="showHome()">GoPlay</h1>
+    <p id="header-subtitle">Learn &amp; Play</p>
+  </header>
+
+  <main id="app-main">
+    <!-- Home Screen -->
+    <section id="home-screen" class="screen active">
+      <h2>Choose an Activity</h2>
+      <div class="activity-grid">
+        <button class="activity-card" onclick="startActivity('blending')" data-color="coral">
+          <span class="card-icon">🔤</span>
+          <span class="card-title">Blending</span>
+          <span class="card-desc">Blend sounds together to read words</span>
+        </button>
+        <button class="activity-card" onclick="startActivity('first-sounds')" data-color="sky">
+          <span class="card-icon">👂</span>
+          <span class="card-title">First Sounds</span>
+          <span class="card-desc">Identify the first sound in a word</span>
+        </button>
+        <button class="activity-card" onclick="startActivity('sight-words')" data-color="mint">
+          <span class="card-icon">👁️</span>
+          <span class="card-title">Matching Sight Words</span>
+          <span class="card-desc">Match sight words to their pairs</span>
+        </button>
+        <button class="activity-card" onclick="startActivity('grammar-cloze')" data-color="lavender">
+          <span class="card-icon">📝</span>
+          <span class="card-title">Grammar Clozes</span>
+          <span class="card-desc">Fill in the correct grammar word</span>
+        </button>
+        <button class="activity-card" onclick="startActivity('vocab-cloze')" data-color="peach">
+          <span class="card-icon">📖</span>
+          <span class="card-title">Vocabulary Clozes</span>
+          <span class="card-desc">Choose the right vocabulary word</span>
+        </button>
+        <button class="activity-card" onclick="startActivity('word-order')" data-color="gold">
+          <span class="card-icon">🔀</span>
+          <span class="card-title">Word Order</span>
+          <span class="card-desc">Arrange words to form sentences</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Blending Activity -->
+    <section id="blending-screen" class="screen">
+      <div class="activity-header">
+        <h2>Blending</h2>
+        <div class="progress-bar"><div id="blending-progress" class="progress-fill"></div></div>
+        <span id="blending-score" class="score">0 / 0</span>
+      </div>
+      <div class="activity-content">
+        <p class="instruction">Blend these sounds together. What word do they make?</p>
+        <div id="blending-sounds" class="sound-display"></div>
+        <div id="blending-options" class="options-grid"></div>
+        <div id="blending-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- First Sounds Activity -->
+    <section id="first-sounds-screen" class="screen">
+      <div class="activity-header">
+        <h2>First Sounds</h2>
+        <div class="progress-bar"><div id="first-sounds-progress" class="progress-fill"></div></div>
+        <span id="first-sounds-score" class="score">0 / 0</span>
+      </div>
+      <div class="activity-content">
+        <p class="instruction">What is the first sound in this word?</p>
+        <div id="first-sounds-word" class="word-display"></div>
+        <div id="first-sounds-options" class="options-grid"></div>
+        <div id="first-sounds-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- Matching Sight Words Activity -->
+    <section id="sight-words-screen" class="screen">
+      <div class="activity-header">
+        <h2>Matching Sight Words</h2>
+        <div class="progress-bar"><div id="sight-words-progress" class="progress-fill"></div></div>
+        <span id="sight-words-score" class="score">0 / 0</span>
+      </div>
+      <div class="activity-content">
+        <p class="instruction">Tap matching pairs of sight words!</p>
+        <div id="sight-words-grid" class="match-grid"></div>
+        <div id="sight-words-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- Grammar Cloze Activity -->
+    <section id="grammar-cloze-screen" class="screen">
+      <div class="activity-header">
+        <h2>Grammar Clozes</h2>
+        <div class="progress-bar"><div id="grammar-cloze-progress" class="progress-fill"></div></div>
+        <span id="grammar-cloze-score" class="score">0 / 0</span>
+      </div>
+      <div class="activity-content">
+        <p class="instruction">Choose the correct word to complete the sentence.</p>
+        <div id="grammar-cloze-sentence" class="sentence-display"></div>
+        <div id="grammar-cloze-options" class="options-grid"></div>
+        <div id="grammar-cloze-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- Vocabulary Cloze Activity -->
+    <section id="vocab-cloze-screen" class="screen">
+      <div class="activity-header">
+        <h2>Vocabulary Clozes</h2>
+        <div class="progress-bar"><div id="vocab-cloze-progress" class="progress-fill"></div></div>
+        <span id="vocab-cloze-score" class="score">0 / 0</span>
+      </div>
+      <div class="activity-content">
+        <p class="instruction">Choose the best word to complete the sentence.</p>
+        <div id="vocab-cloze-sentence" class="sentence-display"></div>
+        <div id="vocab-cloze-options" class="options-grid"></div>
+        <div id="vocab-cloze-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- Word Order Activity -->
+    <section id="word-order-screen" class="screen">
+      <div class="activity-header">
+        <h2>Word Order</h2>
+        <div class="progress-bar"><div id="word-order-progress" class="progress-fill"></div></div>
+        <span id="word-order-score" class="score">0 / 0</span>
+      </div>
+      <div class="activity-content">
+        <p class="instruction">Arrange the words in the correct order to make a sentence.</p>
+        <div id="word-order-sentence" class="sentence-build">
+          <div id="word-order-built" class="built-sentence"></div>
+        </div>
+        <div id="word-order-bank" class="word-bank"></div>
+        <button id="word-order-clear" class="btn btn-secondary" onclick="WordOrder.clearSentence()" style="display:none;">Clear</button>
+        <div id="word-order-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- Results Screen -->
+    <section id="results-screen" class="screen">
+      <div class="results-content">
+        <h2>Great Job!</h2>
+        <div id="results-icon" class="results-icon"></div>
+        <p id="results-text" class="results-text"></p>
+        <div id="results-stars" class="results-stars"></div>
+        <div class="results-buttons">
+          <button class="btn btn-primary" onclick="replayActivity()">Play Again</button>
+          <button class="btn btn-secondary" onclick="showHome()">Choose Activity</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/blending.js"></script>
+  <script src="js/first-sounds.js"></script>
+  <script src="js/sight-words.js"></script>
+  <script src="js/grammar-cloze.js"></script>
+  <script src="js/vocab-cloze.js"></script>
+  <script src="js/word-order.js"></script>
+</body>
+</html>
