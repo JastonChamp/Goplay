@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Master vocabulary with engaging cloze exercises. Premium learning experience for students." />
+  <meta name="theme-color" content="#6366f1" />
+  <title>VocabMaster Pro - Premium Vocabulary Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loader">
+      <div class="loader-ring"></div>
+      <div class="loader-text">VocabMaster Pro</div>
+    </div>
+  </div>
+
+  <!-- Confetti Container -->
+  <div id="confetti-container" class="confetti-container"></div>
+
+  <!-- Achievement Popup -->
+  <div id="achievement-popup" class="achievement-popup">
+    <div class="achievement-content">
+      <div class="achievement-icon">🏆</div>
+      <div class="achievement-text">
+        <span class="achievement-title">Achievement Unlocked!</span>
+        <span class="achievement-name" id="achievement-name"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Streak Popup -->
+  <div id="streak-popup" class="streak-popup">
+    <div class="streak-flames">🔥</div>
+    <div class="streak-count" id="streak-popup-count">5</div>
+    <div class="streak-label">Day Streak!</div>
+  </div>
+
+  <!-- XP Gain Animation -->
+  <div id="xp-popup" class="xp-popup">+<span id="xp-amount">50</span> XP</div>
+
+  <!-- Onboarding Modal -->
+  <div id="onboarding-modal" class="modal-overlay">
+    <div class="modal-card onboarding-modal">
+      <div class="onboarding-header">
+        <div class="onboarding-logo">
+          <span class="logo-icon">📚</span>
+          <span class="logo-text">VocabMaster Pro</span>
+        </div>
+        <h2>Welcome to Your Learning Journey!</h2>
+        <p class="onboarding-subtitle">Master vocabulary through engaging, context-based exercises</p>
+      </div>
+
+      <div class="onboarding-steps">
+        <div class="onboarding-step">
+          <div class="step-icon">🎯</div>
+          <div class="step-content">
+            <h3>Fill the Blanks</h3>
+            <p>Drag words from the bank or tap to place them in context</p>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="step-icon">💡</div>
+          <div class="step-content">
+            <h3>Use Hints Wisely</h3>
+            <p>Click highlighted keywords or use hints when stuck</p>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="step-icon">🚀</div>
+          <div class="step-content">
+            <h3>Level Up</h3>
+            <p>Earn XP, unlock achievements, and track your mastery</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="onboarding-features">
+        <div class="feature-tag"><span>✓</span> 7 Learning Modes</div>
+        <div class="feature-tag"><span>✓</span> 6 Difficulty Levels</div>
+        <div class="feature-tag"><span>✓</span> 280+ Passages</div>
+        <div class="feature-tag"><span>✓</span> Progress Tracking</div>
+      </div>
+
+      <button id="start-learning-btn" class="btn btn-primary btn-large pulse-animation">
+        Start Learning
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Daily Challenge Modal -->
+  <div id="daily-challenge-modal" class="modal-overlay hidden">
+    <div class="modal-card daily-modal">
+      <button class="modal-close" id="close-daily-modal">×</button>
+      <div class="daily-header">
+        <div class="daily-icon">🎯</div>
+        <h2>Daily Challenge</h2>
+        <p class="daily-date" id="daily-date"></p>
+      </div>
+      <div class="daily-content">
+        <div class="daily-challenge-card" id="daily-challenge-info">
+          <div class="challenge-type">Today's Focus</div>
+          <div class="challenge-category" id="daily-category">Context Inference</div>
+          <div class="challenge-goal">Complete 3 passages perfectly</div>
+        </div>
+        <div class="daily-reward">
+          <span class="reward-icon">💎</span>
+          <span class="reward-text">Bonus: 100 XP + Special Badge</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="start-daily-btn">Accept Challenge</button>
+    </div>
+  </div>
+
+  <!-- App Container -->
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <span class="brand-icon">📚</span>
+          <span class="brand-text">VocabMaster</span>
+          <span class="brand-pro">PRO</span>
+        </div>
+        <button class="sidebar-close" id="sidebar-close">×</button>
+      </div>
+
+      <!-- User Profile Card -->
+      <div class="user-card">
+        <div class="user-avatar" id="user-avatar">
+          <span class="avatar-emoji">🎓</span>
+          <div class="level-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="level-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="level-ring-fill" id="level-progress-ring" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+          </div>
+        </div>
+        <div class="user-info">
+          <span class="user-level" id="user-level">Apprentice</span>
+          <div class="xp-bar">
+            <div class="xp-fill" id="xp-fill"></div>
+            <span class="xp-text" id="xp-text">0 / 100 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-cards">
+        <div class="stat-card stat-streak">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-value" id="streak-count">0</span>
+          <span class="stat-label">Day Streak</span>
+        </div>
+        <div class="stat-card stat-gems">
+          <span class="stat-icon">💎</span>
+          <span class="stat-value" id="gems-count">0</span>
+          <span class="stat-label">Gems</span>
+        </div>
+        <div class="stat-card stat-stars">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-value" id="total-stars">0</span>
+          <span class="stat-label">Stars</span>
+        </div>
+        <div class="stat-card stat-mastery">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-value" id="mastery-percent">0%</span>
+          <span class="stat-label">Mastery</span>
+        </div>
+      </div>
+
+      <!-- Daily Challenge Button -->
+      <button class="daily-challenge-btn" id="open-daily-challenge">
+        <span class="daily-btn-icon">🎯</span>
+        <span class="daily-btn-text">Daily Challenge</span>
+        <span class="daily-btn-badge" id="daily-status">NEW</span>
+      </button>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3 class="nav-title">Learning Mode</h3>
+          <div class="category-selector">
+            <select id="vocab-category" class="select-modern">
+              <option value="contextInference">🔍 Context Inference</option>
+              <option value="definitionMatch">📖 Definition Match</option>
+              <option value="synonymContrast">🔄 Synonym Contrast</option>
+              <option value="morphologicalAffix">🔤 Morphological Affix</option>
+              <option value="collocationCloze">🔗 Collocation Cloze</option>
+              <option value="grammaticalRole">📝 Grammatical Role</option>
+              <option value="connectorClue">🔀 Connector Clue</option>
+            </select>
+          </div>
+          <p class="category-desc" id="category-description">Learn words from surrounding context clues.</p>
+        </div>
+
+        <div class="nav-section">
+          <h3 class="nav-title">Difficulty Level</h3>
+          <div class="level-pills" id="level-pills">
+            <button class="level-pill active" data-level="p1">P1</button>
+            <button class="level-pill" data-level="p2">P2</button>
+            <button class="level-pill" data-level="p3">P3</button>
+            <button class="level-pill" data-level="p4">P4</button>
+            <button class="level-pill" data-level="p5">P5</button>
+            <button class="level-pill" data-level="p6">P6</button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Settings -->
+      <div class="settings-section">
+        <h3 class="nav-title">Settings</h3>
+
+        <div class="setting-row">
+          <span class="setting-label">Timer</span>
+          <select id="timer-setting" class="select-small">
+            <option value="off">Off</option>
+            <option value="120">2 min</option>
+            <option value="60" selected>1 min</option>
+            <option value="30">30 sec</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label">Theme</span>
+          <select id="theme-select" class="select-small">
+            <option value="default">Midnight</option>
+            <option value="light">Daylight</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="sunset">Sunset</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label">Text Size</span>
+          <input type="range" id="text-size-slider" min="1" max="1.8" step="0.1" value="1.2" class="slider-modern">
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label">Voice</span>
+          <select id="voice-select" class="select-small"></select>
+        </div>
+
+        <div class="toggle-buttons">
+          <button class="toggle-btn" id="toggle-dyslexia">
+            <span class="toggle-icon">Aa</span>
+            <span class="toggle-text">Dyslexia Font</span>
+          </button>
+          <button class="toggle-btn" id="toggle-sound">
+            <span class="toggle-icon">🔊</span>
+            <span class="toggle-text">Sound</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="sidebar-footer">
+        <button class="btn-ghost" id="export-stats-btn">Export Progress</button>
+        <button class="btn-ghost btn-danger" id="reset-stats-btn">Reset All</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <button class="menu-toggle" id="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="top-stats">
+          <div class="top-stat">
+            <span class="top-stat-icon">🔥</span>
+            <span class="top-stat-value" id="top-streak">0</span>
+          </div>
+          <div class="top-stat">
+            <span class="top-stat-icon">💎</span>
+            <span class="top-stat-value" id="top-gems">0</span>
+          </div>
+          <div class="top-stat">
+            <span class="top-stat-icon">⭐</span>
+            <span class="top-stat-value" id="top-stars">0/3</span>
+          </div>
+        </div>
+
+        <div class="progress-indicator">
+          <span class="progress-text" id="passage-progress">1 / 10</span>
+          <div class="progress-bar-mini">
+            <div class="progress-fill-mini" id="progress-fill-mini"></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Game Area -->
+      <div class="game-area">
+        <!-- Timer Bar -->
+        <div class="timer-section" id="timer-section">
+          <div class="timer-bar">
+            <div class="timer-fill" id="timer-fill"></div>
+          </div>
+          <span class="timer-text" id="timer-text">60s</span>
+        </div>
+
+        <!-- Passage Card -->
+        <div class="passage-card">
+          <div class="passage-header">
+            <span class="passage-badge" id="category-badge">Context Inference</span>
+            <span class="passage-level" id="level-badge">Level P1</span>
+          </div>
+          <div class="passage-content" id="passage-text"></div>
+        </div>
+
+        <!-- Word Bank -->
+        <div class="word-bank-card">
+          <div class="word-bank-header">
+            <span class="word-bank-title">Word Bank</span>
+            <span class="word-bank-hint">Drag or tap to place</span>
+          </div>
+          <div class="word-bank" id="word-box"></div>
+        </div>
+
+        <!-- Feedback Area -->
+        <div class="feedback-card" id="feedback"></div>
+
+        <!-- Action Buttons -->
+        <div class="action-bar">
+          <div class="action-group">
+            <button class="action-btn hint-btn" id="hint-btn" title="Get Hint (H)">
+              <span class="action-icon">💡</span>
+              <span class="action-text">Hint</span>
+            </button>
+            <button class="action-btn listen-btn" id="read-passage-btn" title="Listen">
+              <span class="action-icon">🔊</span>
+              <span class="action-text">Listen</span>
+            </button>
+            <button class="action-btn reset-btn" id="reset-words-btn" title="Reset">
+              <span class="action-icon">↺</span>
+              <span class="action-text">Reset</span>
+            </button>
+          </div>
+
+          <button class="submit-btn" id="submit-btn">
+            <span class="submit-text">Check Answers</span>
+            <span class="submit-icon">✓</span>
+          </button>
+
+          <div class="nav-group">
+            <button class="nav-btn prev-btn" id="prev-btn" disabled>
+              <span class="nav-icon">←</span>
+            </button>
+            <button class="nav-btn next-btn" id="next-btn">
+              <span class="nav-icon">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Card (shown after completion) -->
+      <div class="results-card hidden" id="results-card">
+        <div class="results-header">
+          <div class="results-stars" id="results-stars">
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+          </div>
+          <h2 class="results-title" id="results-title">Excellent!</h2>
+        </div>
+        <div class="results-stats">
+          <div class="result-stat">
+            <span class="result-value" id="result-score">100</span>
+            <span class="result-label">Score</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-value" id="result-xp">+50</span>
+            <span class="result-label">XP Earned</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-value" id="result-accuracy">100%</span>
+            <span class="result-label">Accuracy</span>
+          </div>
+        </div>
+        <div class="results-actions">
+          <button class="btn btn-secondary" id="review-btn">Review</button>
+          <button class="btn btn-primary" id="continue-btn">Continue</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Hidden elements for compatibility -->
+  <button id="clear-btn" style="display:none;"></button>
+  <button id="share-btn" style="display:none;"></button>
+  <span id="score" style="display:none;">0</span>
+  <span id="stars" style="display:none;">0/3</span>
+  <span id="coins" style="display:none;">0</span>
+  <span id="streak" style="display:none;">0</span>
+  <span id="level" style="display:none;">Apprentice</span>
+  <span id="progress" style="display:none;"></span>
+  <span id="timer" style="display:none;">60s</span>
+  <span id="achievements" style="display:none;"></span>
+  <span id="themes-info" style="display:none;"></span>
+  <div id="progress-bar" style="display:none;"></div>
+  <div id="timer-bar" style="display:none;"></div>
+  <div id="timer-container" style="display:none;"></div>
+  <div id="progress-bar-container" style="display:none;"></div>
+  <span id="completed-count" style="display:none;">0</span>
+  <span id="total-score-summary" style="display:none;">0</span>
+  <span id="missed-clues-summary" style="display:none;"></span>
+  <button id="toggle-theme" style="display:none;"></button>
+  <select id="level-select" style="display:none;"><option value="p1">P1</option></select>
+
+  <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
