@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A fun phonics blending game for kids!">
+  <title>Word Spinner - Phonics Fun</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap">
+</head>
+<body>
+  <div class="app-wrapper">
+    <header>
+      <div class="header-content">
+        <h1>Word Spinner</h1>
+        <p>Spin, Blend, and Shine! 🌟</p>
+      </div>
+    </header>
+    <main class="container">
+      <section class="core-controls" aria-label="Game Controls">
+        <div class="score-section">
+          <p id="scoreText">Score: <span id="scoreValue" aria-live="polite">0</span></p>
+          <div id="streakSection" class="streak-section" aria-live="polite">
+            <span class="streak-flame">&#x1F525;</span>
+            <span id="streakCount">0</span> in a row!
+          </div>
+        </div>
+
+        <!-- Daily Goal Progress Ring -->
+        <div id="dailyGoalWidget" class="daily-goal-widget">
+          <div class="goal-ring-container">
+            <svg class="goal-ring" viewBox="0 0 100 100">
+              <circle class="goal-ring-bg" cx="50" cy="50" r="45"/>
+              <circle class="goal-ring-progress" id="goalRingProgress" cx="50" cy="50" r="45"/>
+            </svg>
+            <div class="goal-ring-content">
+              <span id="dailyGoalCurrent" class="goal-current">0</span>
+              <span class="goal-separator">/</span>
+              <span id="dailyGoalTarget" class="goal-target">10</span>
+            </div>
+          </div>
+          <div class="goal-info">
+            <span class="goal-label">Daily Goal</span>
+            <span id="dailyStreakDays" class="daily-streak">🔥 0 day streak</span>
+          </div>
+        </div>
+
+        <div id="sessionSummary" class="session-summary" aria-label="Session statistics">
+          <button id="toggleSessionSummary" class="session-toggle" aria-expanded="false">📊 Session</button>
+          <div id="sessionDetails" class="session-details" hidden>
+            <div class="session-stat">
+              <span class="stat-icon">📝</span>
+              <span class="stat-label">Words:</span>
+              <span id="sessionWords" class="stat-value">0</span>
+            </div>
+            <div class="session-stat">
+              <span class="stat-icon">⏱️</span>
+              <span class="stat-label">Time:</span>
+              <span id="sessionTime" class="stat-value">0:00</span>
+            </div>
+            <div class="session-stat">
+              <span class="stat-icon">🎯</span>
+              <span class="stat-label">Best Streak:</span>
+              <span id="sessionBestStreak" class="stat-value">0</span>
+            </div>
+          </div>
+        </div>
+        <div class="game-area">
+          <div class="word-display-container">
+            <div class="word-display" id="wordBox" aria-live="polite"></div>
+            <div class="mascot" aria-hidden="true">🦜</div>
+          </div>
+          <div class="action-buttons">
+            <button id="spinButton" aria-label="Spin for a new word" accesskey="s" title="Get a new word to practice (Shortcut: S)">
+              <span class="icon" aria-hidden="true">🎡</span> Spin
+            </button>
+            <button id="repeatButton" aria-label="Repeat the word" accesskey="r" disabled title="Hear the word sounds again (Shortcut: R)">
+              <span class="icon" aria-hidden="true">🔄</span> Repeat
+            </button>
+            <button id="hintButton" aria-label="Get a hint" accesskey="h" hidden title="Highlight and hear each sound slowly (Shortcut: H)">
+              <span class="icon" aria-hidden="true">💡</span> Hint
+            </button>
+            <button id="skipButton" aria-label="Skip this word" hidden title="Skip this word (resets your streak)">
+              <span class="icon" aria-hidden="true">⏭️</span> Skip
+            </button>
+          </div>
+          <div class="keyboard-hints" aria-hidden="true">
+            <span class="kbd-hint"><kbd class="kbd">S</kbd> Spin</span>
+            <span class="kbd-hint"><kbd class="kbd">R</kbd> Repeat</span>
+            <span class="kbd-hint"><kbd class="kbd">H</kbd> Hint</span>
+          </div>
+        </div>
+        <div class="progress-container">
+          <div class="progress-icon" id="progressIcon" aria-hidden="true">🚀</div>
+          <div id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div id="progressFill"></div>
+          </div>
+          <p id="progressText" aria-live="polite">0 / 0 Words</p>
+        </div>
+        <div id="badges" class="badges"></div>
+        <div id="colorLegend" class="color-legend" aria-label="Letter color guide">
+          <button id="toggleLegend" class="legend-toggle" aria-expanded="false">📖 Color Guide</button>
+          <div class="legend-content" hidden>
+            <span class="legend-item"><span class="legend-color vowel"></span> Vowel</span>
+            <span class="legend-item"><span class="legend-color digraph"></span> Digraph</span>
+            <span class="legend-item"><span class="legend-color silent"></span> Silent</span>
+            <span class="legend-item"><span class="legend-color diphthong"></span> Diphthong</span>
+          </div>
+        </div>
+        <div id="complimentBox" class="compliment-box" aria-live="assertive"></div>
+        <div id="blendingTimerContainer" role="timer" aria-label="Blending timer">
+          <p class="timer-label" aria-live="polite">Blend now! ⏳</p>
+          <div id="blendingTimer" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div id="screenReaderAnnounce" class="sr-only" aria-live="assertive"></div>
+      </section>
+      <section class="settings-toggle">
+        <button id="toggleSettingsButton" aria-expanded="false" aria-controls="advancedSettings">
+          ⚙️ Customize
+        </button>
+      </section>
+      <section id="advancedSettings" class="advanced-settings">
+        <h2 class="sr-only">Game Settings</h2>
+        <div class="controls-section">
+          <div class="select-controls">
+            <div>
+              <label for="wordTypeSelector">Word Type:</label>
+              <select id="wordTypeSelector" aria-label="Select word type">
+                <option value="cvc" selected>CVC Words</option>
+                <option value="ccvc">CCVC Words</option>
+                <option value="cvcc">CVCC Words</option>
+                <option value="ccvcc">CCVCC Words</option>
+                <option value="digraphs">Digraphs</option>
+                <option value="extended">Extended Words</option>
+                <option value="silentE">Silent E Words</option>
+                <option value="softCAndG">Soft C & G Words</option>
+                <option value="diphthongs">Diphthongs</option>
+                <option value="longVowels">Long Vowel Words (Advanced)</option>
+              </select>
+              <div id="wordTypeDesc" class="word-type-desc">e.g. cat, dog, sun</div>
+            </div>
+            <div>
+              <label for="vowelSelector">Focus Vowel:</label>
+              <select id="vowelSelector" aria-label="Select focus vowel">
+                <option value="all" selected>All Vowels</option>
+                <option value="a">A</option>
+                <option value="e">E</option>
+                <option value="i">I</option>
+                <option value="o">O</option>
+                <option value="u">U</option>
+              </select>
+            </div>
+            <div>
+              <label for="themeSelector">Theme:</label>
+              <select id="themeSelector" aria-label="Select theme">
+                <option value="default">Default</option>
+                <option value="space">Space Adventure</option>
+                <option value="forest">Enchanted Forest</option>
+                <option value="high-contrast">High Contrast</option>
+              </select>
+            </div>
+          </div>
+          <div class="timer-controls">
+            <label for="blendingDelayInput">Blending Time (sec):</label>
+            <div class="time-adjust" id="blendingDelayInput">
+              <button id="decreaseBlendingTime" aria-label="Decrease blending time">➖</button>
+              <span id="blendingTimeDisplay" aria-live="polite">3</span>
+              <button id="increaseBlendingTime" aria-label="Increase blending time">➕</button>
+            </div>
+          </div>
+          <div class="settings-section">
+            <label>
+              <input type="checkbox" id="celebrationMode" aria-label="Enable celebration mode">
+              Celebration Mode
+            </label>
+          </div>
+          <div class="settings-buttons">
+            <button id="toggleAudioButton" aria-label="Toggle sounds" title="Turn sound effects on or off">🔊 Sound On</button>
+            <button id="fullscreenButton" aria-label="Toggle fullscreen" title="Play in fullscreen mode">⛶ Fullscreen</button>
+            <button id="parentDashboardButton" aria-label="Open parent dashboard" title="View learning progress and insights">👨‍👩‍👧 Parent Dashboard</button>
+            <button id="resetProgressButton" aria-label="Reset all progress" title="Clear all scores, badges, and word history">🗑 Reset</button>
+          </div>
+          <div class="settings-section">
+            <label for="dailyGoalSelect">Daily Word Goal:</label>
+            <select id="dailyGoalSelect">
+              <option value="5">5 words</option>
+              <option value="10" selected>10 words</option>
+              <option value="15">15 words</option>
+              <option value="20">20 words</option>
+              <option value="30">30 words</option>
+            </select>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <p class="note">Tip: Say the word aloud to blend it!</p>
+      </footer>
+    </main>
+    <div id="confettiContainer" aria-hidden="true"></div>
+    <div id="scoreIncrement" class="score-increment" aria-hidden="true"></div>
+
+    <!-- Difficult Word Indicator -->
+    <div id="difficultWordBanner" class="difficult-word-banner" hidden>
+      <span class="banner-icon">📚</span>
+      <span class="banner-text">Review Word</span>
+    </div>
+
+    <!-- Daily Goal Complete Celebration -->
+    <div id="goalCompleteCelebration" class="goal-complete-celebration" hidden>
+      <div class="celebration-content">
+        <span class="celebration-icon">🎉</span>
+        <h3>Daily Goal Complete!</h3>
+        <p>Amazing work! You practiced <span id="celebrationWordCount">10</span> words today!</p>
+        <button id="closeCelebration">Keep Going!</button>
+      </div>
+    </div>
+
+    <!-- Parent Dashboard Modal -->
+    <dialog id="parentDashboardModal" class="modal parent-modal">
+      <div class="modal-content dashboard-content">
+        <div class="dashboard-header">
+          <h2>📊 Learning Dashboard</h2>
+          <button id="closeParentDashboard" class="close-btn" aria-label="Close dashboard">✕</button>
+        </div>
+
+        <div class="dashboard-tabs">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="progress">Progress</button>
+          <button class="tab-btn" data-tab="words">Word History</button>
+          <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <div class="dashboard-tab-content" id="tab-overview">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-card-icon">📅</span>
+              <span class="stat-card-value" id="dashTotalDays">0</span>
+              <span class="stat-card-label">Days Practiced</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-icon">📝</span>
+              <span class="stat-card-value" id="dashTotalWords">0</span>
+              <span class="stat-card-label">Words Learned</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-icon">🔥</span>
+              <span class="stat-card-value" id="dashBestStreak">0</span>
+              <span class="stat-card-label">Best Streak</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card-icon">⏱️</span>
+              <span class="stat-card-value" id="dashTotalTime">0m</span>
+              <span class="stat-card-label">Total Time</span>
+            </div>
+          </div>
+
+          <div class="weekly-chart-section">
+            <h3>This Week's Activity</h3>
+            <div class="weekly-chart" id="weeklyChart"></div>
+          </div>
+
+          <div class="mastery-overview">
+            <h3>Mastery Progress</h3>
+            <div id="masteryBars" class="mastery-bars"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-tab-content" id="tab-progress" hidden>
+          <div class="learning-path">
+            <h3>Learning Path</h3>
+            <p class="path-description">Master each level to unlock the next!</p>
+            <div id="learningPathList" class="path-list"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-tab-content" id="tab-words" hidden>
+          <div class="word-history-section">
+            <div class="history-filters">
+              <button class="filter-btn active" data-filter="all">All Words</button>
+              <button class="filter-btn" data-filter="difficult">Needs Practice</button>
+              <button class="filter-btn" data-filter="mastered">Mastered</button>
+            </div>
+            <div id="wordHistoryList" class="word-history-list"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-tab-content" id="tab-settings" hidden>
+          <div class="parent-settings">
+            <h3>Parental Controls</h3>
+            <div class="setting-row">
+              <label for="sessionTimeLimit">Session Time Limit:</label>
+              <select id="sessionTimeLimit">
+                <option value="0">No limit</option>
+                <option value="10">10 minutes</option>
+                <option value="15">15 minutes</option>
+                <option value="20">20 minutes</option>
+                <option value="30">30 minutes</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label for="difficultyLock">Lock Difficulty Level:</label>
+              <select id="difficultyLock">
+                <option value="0">Auto-unlock</option>
+                <option value="1">CVC only</option>
+                <option value="2">Up to CCVC</option>
+                <option value="3">Up to Digraphs</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label>
+                <input type="checkbox" id="requireMastery">
+                Require 80% mastery to unlock next level
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="tutorialModal" class="modal">
+      <div class="modal-content">
+        <h2>Welcome to Word Spinner!</h2>
+        <div class="tutorial-steps">
+          <div class="tutorial-step">
+            <span class="step-icon">🎡</span>
+            <p><strong>Spin</strong> to get a new word</p>
+          </div>
+          <div class="tutorial-step">
+            <span class="step-icon">👂</span>
+            <p><strong>Listen</strong> to each letter sound</p>
+          </div>
+          <div class="tutorial-step">
+            <span class="step-icon">🗣️</span>
+            <p><strong>Blend</strong> the sounds together aloud</p>
+          </div>
+          <div class="tutorial-step">
+            <span class="step-icon">⭐</span>
+            <p><strong>Earn</strong> points and badges!</p>
+          </div>
+        </div>
+        <p class="tutorial-tip">Tip: Use <kbd>S</kbd> <kbd>R</kbd> <kbd>H</kbd> keys for shortcuts!</p>
+        <div class="modal-buttons">
+          <button id="startTutorial" aria-label="Start playing">Let's Play!</button>
+          <button id="skipTutorial" aria-label="Skip tutorial" class="secondary">Skip</button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

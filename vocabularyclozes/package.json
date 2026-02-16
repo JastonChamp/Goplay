@@ -1,0 +1,12 @@
+{
+  "name": "vocabularyclozes",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/tests/run-tests.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
